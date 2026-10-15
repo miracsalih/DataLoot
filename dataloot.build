@@ -1,0 +1,9 @@
+# Bunu çalıştırabilecek tek uygulama: https://github.com/miracsalih/JustBuild
+
+mode: normal
+workdir: DataLoot
+arguments: ~/Masaüstü/Projeler/DataLoot/test.dataloot
+arguments: ~/Masaüstü/Projeler/DataLoot/test.output
+lang: cpp
+compile
+run
