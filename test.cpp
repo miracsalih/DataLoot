@@ -1,7 +1,32 @@
-#include "dataloot.hpp"
+/*
+ * DataLoot/test.cpp
+ * Copyright (C) 2026  Miraç Salih İşler
+ *
+ * Bu program özgür yazılımdır: GNU Genel Kamu Lisansı'nın (GNU General
+ * Public License) Free Software Foundation tarafından yayımlanan koşulları
+ * altında (Lisansın 3. sürümü veya (isteğinize göre) daha sonraki bir
+ * sürümü) yeniden dağıtabilir ve/veya değiştirebilirsiniz.
+ *
+ * Bu program, işe yarayacağı umuduyla dağıtılmaktadır, ancak HİÇBİR GARANTİ
+ * VERİLMEZ; hatta TİCARİ ELVERİŞLİLİK veya BELİRLİ BİR AMACA UYGUNLUK
+ * garantisi bile verilmez. Daha fazla ayrıntı için GNU Genel Kamu
+ * Lisansı'na bakın.
+ *
+ * Bu programla birlikte GNU Genel Kamu Lisansı'nın bir kopyasını almış
+ * olmalısınız. Eğer almamışsanız, <https://www.gnu.org/licenses/> adresine
+ * bakın.
+ */
+
+#include "lexer.hpp"
 #include <sstream>
 #include <fstream>
 #include <iostream>
+#include <string>
+
+static std::string toop(Lexer::Op encodeop) {
+    if (encodeop == Lexer::Op::noop) return "OPERATÖR DEĞİL";
+    else return "OPERATÖR";
+}
 
 int main(int argc, char* argv[]) {
     if (argc < 3) {
@@ -24,10 +49,10 @@ int main(int argc, char* argv[]) {
     std::stringstream ss;
     ss << input.rdbuf();
 
-    std::vector<Out> out = encode(ss);
-    for (const auto& [op, data]: out) {
-        output << "Veri: " + data + "\nTip:  " + (op == Out::Op::yesop ? "YESOP" : "NOOP") + "\n";
-        output << std::endl;
+    std::vector<Lexer> code1 = lexerfunc(ss);
+    for (const auto& [op, data] : code1) {
+        output << "Data: " << data << "\n";
+        //output << "Data: " << data << "\nOp  : " << toop(op) << "\n\n";
     }
 
     input.close();
