@@ -1,7 +1,4 @@
-new {
+new{
     type=int
     name=x
-    data {
-        17
-    }
 }
