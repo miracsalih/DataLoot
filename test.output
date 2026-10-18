@@ -1,39 +1,9 @@
-Veri: new
-Tip:  NOOP
-
-Veri: {
-Tip:  YESOP
-
-Veri: type
-Tip:  NOOP
-
-Veri: =
-Tip:  YESOP
-
-Veri: int
-Tip:  NOOP
-
-Veri: name
-Tip:  NOOP
-
-Veri: =
-Tip:  YESOP
-
-Veri: x
-Tip:  NOOP
-
-Veri: data
-Tip:  NOOP
-
-Veri: {
-Tip:  YESOP
-
-Veri: 17
-Tip:  NOOP
-
-Veri: }
-Tip:  YESOP
-
-Veri: }
-Tip:  YESOP
-
+Data: new
+Data: {
+Data: type
+Data: =
+Data: int
+Data: name
+Data: =
+Data: x
+Data: }
