@@ -21,12 +21,6 @@
 #include <sstream>
 #include <fstream>
 #include <iostream>
-#include <string>
-
-static std::string toop(Lexer::Op encodeop) {
-    if (encodeop == Lexer::Op::noop) return "OPERATÖR DEĞİL";
-    else return "OPERATÖR";
-}
 
 int main(int argc, char* argv[]) {
     if (argc < 3) {
@@ -51,8 +45,7 @@ int main(int argc, char* argv[]) {
 
     std::vector<Lexer> code1 = lexerfunc(ss);
     for (const auto& [op, data] : code1) {
-        output << "Data: " << data << "\n";
-        //output << "Data: " << data << "\nOp  : " << toop(op) << "\n\n";
+        output << "\"" << data << "\",\n";
     }
 
     input.close();
