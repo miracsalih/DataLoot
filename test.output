@@ -1,9 +1,9 @@
-Data: new
-Data: {
-Data: type
-Data: =
-Data: int
-Data: name
-Data: =
-Data: x
-Data: }
+"new",
+"{",
+"type",
+"=",
+"int",
+"name",
+"=",
+"x",
+"}",
