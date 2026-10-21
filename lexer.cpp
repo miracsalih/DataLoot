@@ -17,14 +17,6 @@
  * bakın.
  */
 
-/*
- * DataLoot/lexer.cpp — Compilets'in lexer'ı DEĞİL. =D
- * Compilets (https://github.com/miracsalih/Compilets) kodundan türetilmiştir.
- *
- * "Lütfen iyi kullanın. =D"
- * — Miraç
- */
-
 #include "lexer.hpp"
 #include <sstream>
 #include <vector>
@@ -40,7 +32,8 @@ enum Mode {
 static std::vector<char> sytnax_operator = {
     '{',
     '}',
-    '='
+    '=',
+    ','
 };
 
 static bool isOperator(char& op) {
@@ -52,7 +45,6 @@ static bool isOperator(char& op) {
 std::vector<Lexer> lexerfunc(std::stringstream& code) {
     std::vector<std::string> lexerlayer1;
     std::string token;
-    int line = 0;
 
     std::string kod = code.str();
     Mode mode = Mode::normal;
@@ -124,7 +116,7 @@ std::vector<Lexer> lexerfunc(std::stringstream& code) {
                     lexerlayer1.push_back(token);
                     token = "";
                 }
-             }
+            }
         }
     }
 
@@ -132,29 +124,34 @@ std::vector<Lexer> lexerfunc(std::stringstream& code) {
         if (mode == Mode::string) token += '\"';
         lexerlayer1.push_back(token);
         token = "";
-        line++;
     }
 
-
-
     std::vector<Lexer> lexerlayer2;
+
     for (const std::string& i : lexerlayer1) {
-        Lexer::Op op = Lexer::Op::noop;
+        bool op;
+        enum Mode {
+            normal,
+            string,
+            comment1,
+            comment2
+        };
+        Mode mode = Mode::normal;
         std::string k;
 
         for (size_t idx = 0; idx < i.size(); idx++) {
-            Lexer::Op newtype;
-            char j = i[idx];
+            bool newop;
+                char j = i[idx];
 
-                if (isOperator(j)) newtype = Lexer::Op::yesop;
-                else newtype = Lexer::Op::noop;
+                if (isOperator(j)) newop = true;
+                else newop = false;
 
-                if (mode == Mode::normal && op != newtype) {
+                if (mode == Mode::normal && op != newop) {
                     if (!k.empty()) {
                         lexerlayer2.push_back({.lexerop = op, .lexerdata = k});
                         k = "";
                     }
-                    op = newtype;
+                    op = newop;
                 }
 
                 if (j == '\"') {
@@ -163,10 +160,10 @@ std::vector<Lexer> lexerfunc(std::stringstream& code) {
                 }
 
                 k += j;
-        }
+            }
 
-        if (!k.empty()) lexerlayer2.push_back({.lexerop = op, .lexerdata = k});
-    }
+            if (!k.empty()) lexerlayer2.push_back({.lexerop = op, .lexerdata = k});
+        }
 
     return lexerlayer2;
 }
