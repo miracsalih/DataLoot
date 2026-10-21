@@ -1,5 +1,5 @@
 /*
- * DataLoot/lexer.cpp
+ * DataLoot/lexer.hpp
  * Copyright (C) 2026  Miraç Salih İşler
  *
  * Bu program özgür yazılımdır: GNU Genel Kamu Lisansı'nın (GNU General
@@ -22,12 +22,7 @@
 #include <string>
 
 struct Lexer {
-    enum Op {
-        yesop,
-        noop
-    };
-    
-    Lexer::Op lexerop;            // OPER
+    bool lexerop;                 // OP
     std::string lexerdata;        // DATA
 };
 
