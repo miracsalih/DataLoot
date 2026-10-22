@@ -17,6 +17,12 @@
  * bakın.
  */
 
+/*
+ * Compilets'in Lexer'inin üstüne inşaat ettim bunu. Özel olarak. :D
+ *
+ * Bu arada: Lexer hatalarını buldum. Compilets'e de uyguladım. İyi ki bu proje var! 
+ */
+
 #include "lexer.hpp"
 #include <sstream>
 #include <vector>
@@ -32,8 +38,8 @@ enum Mode {
 static std::vector<char> sytnax_operator = {
     '{',
     '}',
-    '=',
-    ','
+    ':',
+    ';'
 };
 
 static bool isOperator(char& op) {
@@ -89,8 +95,15 @@ std::vector<Lexer> lexerfunc(std::stringstream& code) {
         if (mode == Mode::string) {
             if (i == '\\' && kod.size() > 1 + size) {
                 size++;
-                token += i;
-                token += kod[size];
+                switch (kod[size]) {
+                    case 'n': token += '\n'; break;
+                    case 't': token += '\t'; break;
+                    case 'r': token += '\r'; break;
+                    case '0': token += '\0'; break;
+                    case '\\': token += '\\'; break;
+                    case '"': token += '"'; break;
+                    default: token += kod[size]; break;
+                }
             } else token += i;
         }
         
@@ -141,29 +154,38 @@ std::vector<Lexer> lexerfunc(std::stringstream& code) {
 
         for (size_t idx = 0; idx < i.size(); idx++) {
             bool newop;
-                char j = i[idx];
+            char j = i[idx];
 
-                if (isOperator(j)) newop = true;
-                else newop = false;
+            if (isOperator(j)) newop = true;
+            else newop = false;
 
-                if (mode == Mode::normal && op != newop) {
+            if (mode == Mode::normal) {
+                if (op != newop) {
                     if (!k.empty()) {
                         lexerlayer2.push_back({.lexerop = op, .lexerdata = k});
                         k = "";
                     }
                     op = newop;
+                }  else {
+                    if (newop) {
+                        if (!k.empty()) {
+                            lexerlayer2.push_back({.lexerop = op, .lexerdata = k});
+                            k = "";
+                        }
+                    }
                 }
-
-                if (j == '\"') {
-                    if (mode == Mode::normal) mode = Mode::string;
-                    else mode = Mode::normal;
-                }
-
-                k += j;
             }
 
-            if (!k.empty()) lexerlayer2.push_back({.lexerop = op, .lexerdata = k});
+            if (j == '\"') {
+                if (mode == Mode::normal) mode = Mode::string;
+                else mode = Mode::normal;
+            }
+
+            k += j;
         }
+
+        if (!k.empty()) lexerlayer2.push_back({.lexerop = op, .lexerdata = k});
+    }
 
     return lexerlayer2;
 }
