@@ -1,4 +1,12 @@
-new{
-    type=int
-    name=x
+{
+    this:"syntax";
+    type:int;
+    name:x;
+
+    data: {
+        +:{
+            l:12;
+            r:34;
+        }
+    }
 }
