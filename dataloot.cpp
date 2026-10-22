@@ -30,40 +30,39 @@
 #include <vector>
 #include <string>
 
-// Şuan çalışıyor gibi görünüyor ama çalışmıyor. Denemeyin. :/
-std::vector<std::string> encode(std::map<int, std::vector<Lexer>> code) {
-    std::vector<std::string> out;
-    std::string ch;
-    bool empty;
-    for (const auto& [op, lexer] : code) {
-        for (const auto& [type, data] : lexer) {
-            if (data == "{") {
-                if (ch.empty()) return {"err"};
-                else {
-                    out.push_back(ch);
-                    ch = "";
-                }
+std::map<std::string, std::vector<std::string>> encode(std::vector<Lexer> code) {
+    std::map<std::string, std::vector<std::string>> out;
+    std::vector<std::string> path;
+    std::string name[2];
+    bool mode = false;
+    for (const auto& [op, data] : code) {
+        if (data == ":") {
+            mode = true;
+        } else if (data == ";") {
+            mode = false;
+            std::string a;
+            for (const std::string& i : path) a += i + "/";
+            out[a].push_back(name[0] + ":" + name[1]);
+            name[0] = "";
+            name[1] = "";
+        } else if (data == "{") {
+            mode = false;
+            path.push_back(name[0]);
+            name[0] = "";
+        } else if (data == "}") {
+            if (!name[0].empty() || !name[1].empty()) {
+                mode = false;
+                std::string a;
+                for (const std::string& i : path) a += i + "/";
+                out[a].push_back(name[0] + ":" + name[1]);
+                name[0] = "";
+                name[1] = "";
             }
+            path.pop_back();
+        } else {
+            if (mode) name[1] += data;
+            else name[0] += data;
         }
     }
-
-    /* Mesela:
-
-    new{
-        type=int
-        name=x
-    }
-
-    =
-
-    block new;
-    new type;
-    set type int;
-    new name;
-    set name x;
-    unblock new;
-
-    TODO: Hata kontrolünü sona ekle. Ama çıktı '='dan sonraki gibi olsun. :3
-    */
     return out;
 }
