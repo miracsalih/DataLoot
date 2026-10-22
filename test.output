@@ -1,9 +1,45 @@
-"new",
+DATALOOT LEXER:
+
 "{",
+"this",
+":",
+""syntax"",
+";",
 "type",
-"=",
+":",
 "int",
+";",
 "name",
-"=",
+":",
 "x",
+";",
+"data",
+":",
+"{",
+"+",
+":",
+"{",
+"l",
+":",
+"12",
+";",
+"r",
+":",
+"34",
+";",
 "}",
+"}",
+"}",
+---
+
+DATALOOT PARSER:
+
+Path: /
+	this:"syntax"
+	type:int
+	name:x
+
+Path: /data/+/
+	l:12
+	r:34
+
