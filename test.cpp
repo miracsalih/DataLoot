@@ -17,6 +17,7 @@
  * bakın.
  */
 
+#include "dataloot.hpp"
 #include "lexer.hpp"
 #include <sstream>
 #include <fstream>
@@ -44,8 +45,20 @@ int main(int argc, char* argv[]) {
     ss << input.rdbuf();
 
     std::vector<Lexer> code1 = lexerfunc(ss);
+    output << "DATALOOT LEXER:\n\n";
     for (const auto& [op, data] : code1) {
         output << "\"" << data << "\",\n";
+    }
+    output << "---\n" << std::endl;
+
+    std::map<std::string, std::vector<std::string>> code2 = encode(code1);
+    output << "DATALOOT PARSER:\n\n";
+    for (const auto& [path, data] : code2) {
+        output << "Path: " + path + "\n";
+        for (const std::string& i : data) {
+            output << "\t" + i + "\n";
+        }
+        output << std::endl;
     }
 
     input.close();
