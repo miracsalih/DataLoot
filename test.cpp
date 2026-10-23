@@ -18,7 +18,6 @@
  */
 
 #include "dataloot.hpp"
-#include "lexer.hpp"
 #include <sstream>
 #include <fstream>
 #include <iostream>
@@ -43,13 +42,7 @@ int main(int argc, char* argv[]) {
 
     std::stringstream ss;
     ss << input.rdbuf();
-
-    std::vector<Lexer> code1 = lexerfunc(ss);
-    output << "DATALOOT LEXER:\n\n";
-    for (const auto& [op, data] : code1) {
-        output << "\"" << data << "\",\n";
-    }
-    output << "---\n" << std::endl;
+    std::string code1 = ss.str();
 
     std::map<std::string, std::vector<std::string>> code2 = encode(code1);
     output << "DATALOOT PARSER:\n\n";
