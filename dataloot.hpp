@@ -18,9 +18,8 @@
  */
 
 #pragma once
-#include "lexer.hpp"
 #include <map>
 #include <vector>
 #include <string>
 
-std::map<std::string, std::vector<std::string>> encode(std::vector<Lexer> code);
+std::map<std::string, std::vector<std::string>> encode(std::string& code);
