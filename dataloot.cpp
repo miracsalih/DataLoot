@@ -42,7 +42,7 @@ static bool isOperator(char& op) {
     return equal;
 }
 
-std::map<std::string, std::vector<std::string>> encode(std::string& code) {
+DataLoot decode(std::string& code) {
 
 
 
@@ -152,7 +152,7 @@ std::map<std::string, std::vector<std::string>> encode(std::string& code) {
     std::vector<Lexer> lexerlayer2;
 
     for (const std::string& i : lexerlayer1) {
-        bool op;
+        bool op = false;
         enum Mode {
             normal,
             string,
@@ -163,7 +163,7 @@ std::map<std::string, std::vector<std::string>> encode(std::string& code) {
         std::string k;
 
         for (size_t idx = 0; idx < i.size(); idx++) {
-            bool newop;
+            bool newop = op;
             char j = i[idx];
 
             if (isOperator(j)) newop = true;
@@ -203,34 +203,55 @@ std::map<std::string, std::vector<std::string>> encode(std::string& code) {
 
 
 
-    std::map<std::string, std::vector<std::string>> out;
+    DataLoot out;
     std::vector<std::string> path;
     std::string name[2];
     bool mmode = true;
     for (const auto& [op, data] : lexerlayer2) {
         if (data == ":") {
             mmode = true;
+            if (name[0].empty()) {
+                out.error_found = true;
+                out.error_here.push_back("No name specified.");
+                name[0] = "";
+                name[1] = "";
+            }
         } else if (data == ";") {
             mmode = false;
+
             std::string a;
             for (const std::string& i : path) a += i + "/";
-            out[a].push_back(name[0] + ":" + name[1]);
+
+            for (const auto& [paths, variable] : out.variables) {
+                for (const auto& [varname, vardata] : variable) {
+                    if (varname == name[0]) {
+                        out.error_found = true;
+                        out.error_here.push_back("A variable with the same name: " + name[0]);
+                    }
+                }
+            }
+            if (out.error_found) {
+                name[0] = "";
+                name[1] = "";
+                continue;
+            }
+
+            if (name[1].empty()) name[1] = "null";
+            out.variables[a].push_back({.name = name[0], .data = name[1]});
             name[0] = "";
             name[1] = "";
         } else if (data == "{") {
             mmode = false;
             path.push_back(name[0]);
             name[0] = "";
+            name[1] = "";
         } else if (data == "}") {
-            if (!name[0].empty() || !name[1].empty()) {
-                mmode = false;
-                std::string a;
-                for (const std::string& i : path) a += i + "/";
-                out[a].push_back(name[0] + ":" + name[1]);
-                name[0] = "";
-                name[1] = "";
-            }
-            path.pop_back();
+            if (path.empty()) {
+                out.error_found = true;
+                out.error_here.push_back("An attempt was made to flip the block to negative.");
+            } else path.pop_back();
+            name[0] = "";
+            name[1] = "";
         } else {
             if (mmode) name[1] += data;
             else name[0] += data;
@@ -238,3 +259,12 @@ std::map<std::string, std::vector<std::string>> encode(std::string& code) {
     }
     return out;
 }
+/*
+std::string encode(DataLoot& code) {
+    std::string out;
+    for (size_t size = 0; size < code.variables.size();) {
+        
+    }
+    return out;
+}
+*/
