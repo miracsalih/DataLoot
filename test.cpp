@@ -44,14 +44,18 @@ int main(int argc, char* argv[]) {
     ss << input.rdbuf();
     std::string code1 = ss.str();
 
-    std::map<std::string, std::vector<std::string>> code2 = encode(code1);
+    DataLoot code2 = decode(code1);
     output << "DATALOOT PARSER:\n\n";
-    for (const auto& [path, data] : code2) {
-        output << "Path: " + path + "\n";
-        for (const std::string& i : data) {
-            output << "\t" + i + "\n";
+
+    if (code2.error_found) {
+        output << "Founded errors: " << code2.error_here.size() << "\n";
+        for (const std::string& i : code2.error_here) output << "\t" + i + "\n";
+    } else {
+        for (const auto& [path, var] : code2.variables) {
+            output << "Path: " + path + "\n";
+            for (const auto& [name, data] : var)  output << "\t" + name + ":" + data + "\n";
+            output << std::endl;
         }
-        output << std::endl;
     }
 
     input.close();
