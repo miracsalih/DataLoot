@@ -1,12 +1,20 @@
-{
-    this:"syntax";
-    type:int;
-    name:x;
+// int: x = (10+12)+(20*2);
 
-    data: {
-        +:{
-            l:12;
-            r:34;
+{
+    new:"variable";
+    type:"int";
+    name:"x";
+
+    x:{
+        +: {
+            +:{
+                l:10;
+                r:12;
+            }
+            *:{
+                l:20;
+                r:2;
+            }
         }
     }
 }
