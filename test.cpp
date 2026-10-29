@@ -52,9 +52,10 @@ int main(int argc, char* argv[]) {
         for (const std::string& i : code2.error_here) output << "\t" + i + "\n";
     } else {
         for (const auto& [path, var] : code2.variables) {
-            output << "Path: " + path + "\n";
+            output << "Path: ";
+            for (const std::string i : path) output << i + "/";
+            output << "\n";
             for (const auto& [name, data] : var)  output << "\t" + name + ":" + data + "\n";
-            output << std::endl;
         }
     }
 
