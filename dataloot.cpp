@@ -206,7 +206,7 @@ DataLoot decode(std::string& code) {
     DataLoot out;
     std::vector<std::string> path;
     std::string name[2];
-    bool mmode = true;
+    bool mmode = false;
     for (const auto& [op, data] : lexerlayer2) {
         if (data == ":") {
             mmode = true;
@@ -219,17 +219,15 @@ DataLoot decode(std::string& code) {
         } else if (data == ";") {
             mmode = false;
 
-            std::string a;
-            for (const std::string& i : path) a += i + "/";
-
-            for (const auto& [paths, variable] : out.variables) {
-                for (const auto& [varname, vardata] : variable) {
-                    if (varname == name[0]) {
+            if (out.variables.find(path) != out.variables.end()) {
+                for (const DataLoot::Variable& variable : out.variables[path]) {
+                    if (variable.name == name[0]) {
                         out.error_found = true;
                         out.error_here.push_back("A variable with the same name: " + name[0]);
                     }
                 }
             }
+
             if (out.error_found) {
                 name[0] = "";
                 name[1] = "";
@@ -237,7 +235,7 @@ DataLoot decode(std::string& code) {
             }
 
             if (name[1].empty()) name[1] = "null";
-            out.variables[a].push_back({.name = name[0], .data = name[1]});
+            out.variables[path].push_back({.name = name[0], .data = name[1]});
             name[0] = "";
             name[1] = "";
         } else if (data == "{") {
@@ -259,12 +257,3 @@ DataLoot decode(std::string& code) {
     }
     return out;
 }
-/*
-std::string encode(DataLoot& code) {
-    std::string out;
-    for (size_t size = 0; size < code.variables.size();) {
-        
-    }
-    return out;
-}
-*/
