@@ -1,11 +1,12 @@
 DATALOOT PARSER:
 
 Path: /
-	this:"syntax"
-	type:int
-	name:x
-
-Path: /data/+/
-	l:12
-	r:34
-
+	new:"variable"
+	type:"int"
+	name:"x"
+Path: /x/+/*/
+	l:20
+	r:2
+Path: /x/+/+/
+	l:10
+	r:12
