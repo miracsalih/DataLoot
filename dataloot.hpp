@@ -22,4 +22,14 @@
 #include <vector>
 #include <string>
 
-std::map<std::string, std::vector<std::string>> encode(std::string& code);
+struct DataLoot {
+    struct Variable {
+        std::string name;
+        std::string data;
+    };
+    std::map<std::vector<std::string>, std::vector<Variable>> variables;
+    std::vector<std::string> error_here;
+    bool error_found = false;
+};
+
+DataLoot decode(std::string& code);
